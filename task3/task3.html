@@ -2,12 +2,8 @@
 
 <head>
     <meta charset="utf-8">
-    <script src="gl-matrix.js"></script>
+    <script src="./gl-matrix.js"></script>
 </head>
-
-
-
-
 
 <body >
     <canvas id="mycanvas" width="800" height="500"></canvas>
@@ -99,30 +95,32 @@
 
 
             canvas.addEventListener("mousedown", function (event) {
+
             x = 2 * event.clientX / canvas.width - 1;
             y = 2 * (canvas.height - event.clientY) / canvas.height - 1;
-            var positions = [
-                x  , y  ,
-                x, 1-y,
-                1-x, y,
+
+            var newPositions = [
+                  x,   y,
+                  x, 1-y,
+                1-x,   y,
                 1-x, 1-y,
             ];
+                
             const positionBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(newPositions));
 
-            const colors = [
+            const newColors = [
                 1.0, 1.0, 1.0, 1.0,    // white
                 0.0, 0.0, 1.0, 1.0,    // blue
                 0.0, 0.0, 1.0, 1.0,    // blue
                 0.0, 0.0, 1.0, 1.0,    // blue
             ];
-
-
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
             
             const colorBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+            gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(newColors));
+            
             {
                 const numComponents = 2;
                 const type = gl.FLOAT;
@@ -180,7 +178,7 @@
             // shape. We do this by creating a Float32Array from the
             // JavaScript array, then use it to fill the current buffer.
 
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW);
 
             // Now set up the colors for the vertices
 
@@ -193,7 +191,7 @@
 
             const colorBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.DYNAMIC_DRAW);
     
             return {
                 position: positionBuffer,
