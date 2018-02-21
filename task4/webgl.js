@@ -9,6 +9,8 @@ function main() {
         return;
     }
 
+    var matrixStack = new MatrixStack();
+
     var createFlattenedVertices = function (gl, vertices) {
         return webglUtils.createBufferInfoFromArrays(
             gl,
@@ -52,7 +54,7 @@ function main() {
         u_matrix: m4.identity(),
     };
     var sphereTranslation = [0, 0, 0];
-    var cubeTranslation = [-40, 80, 0];
+    var cubeTranslation = [-40, 80, 80];
     var coneTranslation = [40, 40, 40];
 
     function computeMatrix(viewProjectionMatrix, translation, xRotation, yRotation, zRotation, time) {
@@ -67,52 +69,7 @@ function main() {
 
     requestAnimationFrame(drawScene);
 
-    function MatrixStack() {
-        this.stack = [];
-
-        // since the stack is empty this will put an initial matrix in it
-        this.restore();
-    }
-
-    // Pops the top of the stack restoring the previously saved matrix
-    MatrixStack.prototype.restore = function () {
-        this.stack.pop();
-        // Never let the stack be totally empty
-        if (this.stack.length < 1) {
-            this.stack[0] = m4.identity();
-        }
-    };
-
-    // Pushes a copy of the current matrix on the stack
-    MatrixStack.prototype.save = function () {
-        this.stack.push(this.getCurrentMatrix());
-    };
-    // Gets a copy of the current matrix (top of the stack)
-    MatrixStack.prototype.getCurrentMatrix = function () {
-        return this.stack[this.stack.length - 1].slice();
-    };
-
-    // Lets us set the current matrix
-    MatrixStack.prototype.setCurrentMatrix = function (m) {
-        return this.stack[this.stack.length - 1] = m;
-    };
-    // Translates the current matrix
-    MatrixStack.prototype.translate = function (x, y, z) {
-        var m = this.getCurrentMatrix();
-        this.setCurrentMatrix(m4.translate(m, x, y, z));
-    };
-
-    // Rotates the current matrix around Z
-    MatrixStack.prototype.rotateZ = function (angleInRadians) {
-        var m = this.getCurrentMatrix();
-        this.setCurrentMatrix(m4.zRotate(m, angleInRadians));
-    };
-
-    // Scales the current matrix
-    MatrixStack.prototype.scale = function (x, y, z) {
-        var m = this.getCurrentMatrix();
-        this.setCurrentMatrix(m4.scale(m, x, y, z));
-    };
+    
     // Draw the scene.
     function drawScene(time) {
         time *= 0.0005;
@@ -151,6 +108,12 @@ function main() {
         var coneXRotation = time;
         var coneYRotation = -time;
 
+        matrixStack.save();
+        matrixStack.translate(gl.canvas.width , gl.canvas.height / 2);
+        matrixStack.rotateZ(time);
+    
+        matrixStack.save();
+        {
         // ------ Draw the sphere --------
 
         gl.useProgram(programInfo.program);
@@ -170,7 +133,12 @@ function main() {
         webglUtils.setUniforms(programInfo, sphereUniforms);
 
         gl.drawArrays(gl.TRIANGLES, 0, sphereBufferInfo.numElements);
+        }
 
+        matrixStack.restore();
+
+        matrixStack.save();
+        {
         // ------ Draw the cube --------
 
         // Setup all the needed attributes.
@@ -189,6 +157,11 @@ function main() {
 
         gl.drawArrays(gl.TRIANGLES, 0, cubeBufferInfo.numElements);
 
+        }
+        matrixStack.restore();
+
+        matrixStack.save();
+        {
         // ------ Draw the cone --------
 
         // Setup all the needed attributes.
@@ -207,8 +180,60 @@ function main() {
 
         gl.drawArrays(gl.TRIANGLES, 0, coneBufferInfo.numElements);
 
+        }
+
         requestAnimationFrame(drawScene);
     }
 }
+function MatrixStack() {
+    this.stack = [];
+
+    // since the stack is empty this will put an initial matrix in it
+    this.restore();
+}
+
+// Pops the top of the stack restoring the previously saved matrix
+MatrixStack.prototype.restore = function () {
+    this.stack.pop();
+    // Never let the stack be totally empty
+    if (this.stack.length < 1) {
+        this.stack[0] = m4.identity();
+    }
+};
+
+// Pushes a copy of the current matrix on the stack
+MatrixStack.prototype.save = function () {
+    this.stack.push(this.getCurrentMatrix());
+};
+
+// Gets a copy of the current matrix (top of the stack)
+MatrixStack.prototype.getCurrentMatrix = function () {
+    return this.stack[this.stack.length - 1].slice();
+};
+
+// Lets us set the current matrix
+MatrixStack.prototype.setCurrentMatrix = function (m) {
+    return this.stack[this.stack.length - 1] = m;
+};
+
+// Translates the current matrix
+MatrixStack.prototype.translate = function (x, y, z) {
+    var m = this.getCurrentMatrix();
+    this.setCurrentMatrix(m4.translate(m, x, y, z));
+};
+
+// Rotates the current matrix around Z
+MatrixStack.prototype.rotateZ = function (angleInRadians) {
+    var m = this.getCurrentMatrix();
+    this.setCurrentMatrix(m4.zRotate(m, angleInRadians));
+};
+
+// Scales the current matrix
+MatrixStack.prototype.scale = function (x, y, z) {
+    var m = this.getCurrentMatrix();
+    this.setCurrentMatrix(m4.scale(m, x, y, z));
+};
+
+
 
 main();
