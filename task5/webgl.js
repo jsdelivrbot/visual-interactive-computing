@@ -1,4 +1,20 @@
 "use strict";
+/* Disclaimer: some of this code was obtained from webglfundamentals.org, and belongs to them */
+
+var camera = "botonLongshot"
+
+function changeCamera(newCamera) {
+    camera = newCamera
+}
+
+document.getElementById("botonPrimeraPersona").onclick =
+    function () { changeCamera("botonPrimeraPersona") };
+
+document.getElementById("botonTerceraPersona").onclick =
+    function () { changeCamera("botonTerceraPersona") };
+
+document.getElementById("botonLongshot").onclick =
+    function () { changeCamera("botonLongshot") };
 
 function main() {
     // Get A WebGL context
@@ -91,8 +107,24 @@ function main() {
             m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
         // Compute the camera's matrix using look at.
-        var cameraPosition = [0, 0, 200];
-        var target = [0, 0, 0];
+        switch (camera) {
+            case "botonLongshot":
+                var cameraPosition = [0, 0, 200];
+                var target = sphereTranslation;
+                break;
+            case "botonPrimeraPersona":
+                var cameraPosition = sphereTranslation;
+                var target = [cubeUniforms.u_matrix[10],cubeUniforms.u_matrix[11],cubeUniforms.u_matrix[12]];
+                break;
+            case "botonTerceraPersona":
+                var cameraPosition = [20, 20, 20];
+                var target = sphereTranslation;
+                break;
+            default:
+                var cameraPosition = [0, 0, 200];
+                var target = sphereTranslation;
+                break;
+        }
         var up = [0, 1, 0];
         var cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
