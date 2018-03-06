@@ -103,8 +103,11 @@ function main() {
 
         // Compute the projection matrix
         var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-        var projectionMatrix =
-            m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+        var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+        var zNear = 1;
+        var zFar = 2000;
+        var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
+
 
         // Compute the camera's matrix using look at.
         switch (camera) {
