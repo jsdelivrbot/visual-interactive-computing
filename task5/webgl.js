@@ -114,7 +114,8 @@ function main() {
                 break;
             case "botonPrimeraPersona":
                 var cameraPosition = sphereTranslation;
-                var target = [cubeUniforms.u_matrix[10],cubeUniforms.u_matrix[11],cubeUniforms.u_matrix[12]];
+                /* var target = [cubeUniforms.u_matrix[10],cubeUniforms.u_matrix[11],cubeUniforms.u_matrix[12]]; */
+                var target = cubeTranslation;
                 break;
             case "botonTerceraPersona":
                 var cameraPosition = [20, 20, 20];
