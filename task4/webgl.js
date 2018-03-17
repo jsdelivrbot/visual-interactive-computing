@@ -1,5 +1,5 @@
 "use strict";
-
+/* Disclaimer: some of this code was obtained from webglfundamentals.org, and belongs to them */
 function main() {
     // Get A WebGL context
     /** @type {HTMLCanvasElement} */
@@ -36,9 +36,9 @@ function main() {
         return d * Math.PI / 180;
     }
 
-    var cameraAngleRadians = degToRad(0);
-    var fieldOfViewRadians = degToRad(60);
-    var cameraHeight = 50;
+    var cameraAngleRadians = degToRad(90);
+    var fieldOfViewRadians = degToRad(160);
+    var cameraHeight = 0;
 
     // Uniforms for each object.
     var sphereUniforms = {
@@ -87,14 +87,15 @@ function main() {
 
         // Compute the projection matrix
         var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-        var projectionMatrix =
-            m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
-
+        var zNear = 1;
+        var zFar = 2000;
+        var projectionMatrix = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);
+    
         // Compute the camera's matrix using look at.
-        var cameraPosition = [0, 0, 200];
-        var target = [0, 0, 0];
-        var up = [0, 1, 0];
-        var cameraMatrix = m4.lookAt(cameraPosition, target, up);
+        var cameraPosition = [0, 0, 0];
+        var target = [0, 100, 0];
+        var up = [0, 0, 1];
+        var cameraMatrix = m4.lookAt(cameraPosition, coneTranslation, up);
 
         // Make a view matrix from the camera matrix.
         var viewMatrix = m4.inverse(cameraMatrix);
