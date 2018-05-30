@@ -1,4 +1,8 @@
 import React from 'react';
+import Game from './Game';
+import Board from './Board';
+import Piece from './pieces/Piece';
+import Transparent from './pieces/Transparent'
 import {
   AppRegistry,
   asset,
@@ -27,28 +31,28 @@ export default class GerisGame extends React.Component {
           <Text
             style={{
               backgroundColor: '#777879',
-              fontSize: 0.8,
+              fontSize: 1,
               fontWeight: '400',
               layoutOrigin: [0.5, 0.5],
               paddingLeft: 0.2,
               paddingRight: 0.2,
               textAlign: 'center',
               textAlignVertical: 'center',
-              transform: [{ translate: [0, 0, -3] }],
+              transform: [{ translate: [0, 0.3, -4] }],
             }}>
             Geri's Game
         </Text>
           <Text
             style={{
               backgroundColor: '#777879',
-              fontSize: 0.8,
-              fontWeight: '400',
+              fontSize: 0.6,
+              fontWeight: '300',
               layoutOrigin: [0.5, 0.5],
               paddingLeft: 0.2,
               paddingRight: 0.2,
               textAlign: 'center',
               textAlignVertical: 'center',
-              transform: [{ translate: [0, -1, -3] }],
+              transform: [{ translate: [0, -0.5, -4] }],
             }}>
             Start
         </Text>
@@ -57,16 +61,8 @@ export default class GerisGame extends React.Component {
     }
     else {
       return (
-        <View
-          style={{
-            layoutOrigin: [0.5, 0.5],
-            transform: [{ translate: [0, -1, -3] }],
-          }}
-        >
-          <Image
-            source={asset('chess.jpg')}
-            style={{width: 3, height: 3}}
-          />
+        <View>
+          <Game />
         </View>
       )
     }
