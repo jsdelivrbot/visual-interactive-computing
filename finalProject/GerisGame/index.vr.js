@@ -10,19 +10,20 @@ import {
   Text,
   View,
   VrButton,
-  Image
+  Image,
+  Sound
 } from 'react-vr';
 
 export default class GerisGame extends React.Component {
   state = {
     playing: true,
   }
-
   startPlaying = () => {
     this.setState({ playing: false })
   }
 
   showHome() {
+    let sound = asset('parkSounds.mp3')
     if (this.state.playing) {
       return (
         <VrButton
@@ -62,6 +63,7 @@ export default class GerisGame extends React.Component {
     else {
       return (
         <View>
+          <Sound source={sound}/>
           <Game />
         </View>
       )
