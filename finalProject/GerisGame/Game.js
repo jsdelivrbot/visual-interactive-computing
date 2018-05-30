@@ -6,6 +6,7 @@ import {
     VrButton,
     Image
 } from 'react-vr';
+
 export default class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -19,6 +20,7 @@ export default class Game extends React.Component {
             xIsNext: true
         };
     }
+
     calculateWinner(squares) {
         const lines = [
             [0, 1, 2],
@@ -32,17 +34,20 @@ export default class Game extends React.Component {
         ];
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
+            console.log("a" + squares[a])
+            console.log('c' + squares[c])
+            console.log('b' + squares[b])
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
                 return squares[a];
             }
         }
-        return null;
+        return "";
     }
+
     handleClick(i) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
-
         if (squares[i] !== 'null') {
             return;
         }
@@ -60,6 +65,19 @@ export default class Game extends React.Component {
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext
         });
+    }
+
+    restartGame() {
+        this.setState({
+            history: [
+                {
+                    squares: Array(9).fill("null")
+                }
+            ],
+            stepNumber: 0,
+            xIsNext: true
+        }
+        )
     }
 
     jumpTo(step) {
@@ -86,14 +104,13 @@ export default class Game extends React.Component {
                 });
          */
         let status;
-        if (winner) {
+        if (winner === "") {
             status = "Winner: " + winner;
         } else {
-            status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+            status = "Now plays: " + (this.state.xIsNext ? "X" : "O");
         }
-
         return (
-            <View className="game">
+            <View>
                 <View
                     style={{
                         layoutOrigin: [0.5, 0.5],
@@ -104,10 +121,39 @@ export default class Game extends React.Component {
                         onClick={i => this.handleClick(i)}
                     />
                 </View>
-                {/*                 <View className="game-info">
-                    <View>{status}</View>
-                    <ol>{moves}</ol>
-                </View> */}
+                <View>
+                    <Text
+                        style={{
+                            backgroundColor: '#777879',
+                            fontSize: 0.5,
+                            fontWeight: '300',
+                            layoutOrigin: [0.5, 0.5],
+                            paddingLeft: 0.2,
+                            paddingRight: 0.2,
+                            textAlign: 'center',
+                            textAlignVertical: 'center',
+                            transform: [{ translate: [0, 5.3, -5] }],
+                        }}>{status}</Text>
+                    {/* <ol>{moves}</ol> */}
+                </View>
+                <View>
+                    <VrButton onClick={()=>this.restartGame()} >
+                        <Text
+                            style={{
+                                backgroundColor: '#6d0e0e',
+                                fontSize: 0.5,
+                                fontWeight: '400',
+                                layoutOrigin: [0.5, 0.5],
+                                paddingLeft: 0.1,
+                                paddingRight: 0.1,
+                                textAlign: 'center',
+                                textAlignVertical: 'center',
+                                transform: [{ translate: [0, 1.7, -5] }],
+                            }}>
+                            Restart game
+                         </Text>
+                    </VrButton>
+                </View>
             </View>
         );
     }
