@@ -17,7 +17,7 @@ export default class Game extends React.Component {
                 }
             ],
             stepNumber: 0,
-            xIsNext: true
+            xIsNext: true,
         };
     }
 
@@ -33,11 +33,14 @@ export default class Game extends React.Component {
             [2, 4, 6]
         ];
         for (let i = 0; i < lines.length; i++) {
-            const [a, b, c] = lines[i];
-            console.log("a" + squares[a])
-            console.log('c' + squares[c])
-            console.log('b' + squares[b])
-            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+            let a = lines[i][0];
+            let b = lines[i][1];
+            let c = lines[i][2];
+            if (squares[a] !== null 
+                && squares[a] !== 'null' 
+                && squares[a] 
+                && squares[a] === squares[b] 
+                && squares[a] === squares[c]) {
                 return squares[a];
             }
         }
@@ -75,7 +78,7 @@ export default class Game extends React.Component {
                 }
             ],
             stepNumber: 0,
-            xIsNext: true
+            xIsNext: true,
         }
         )
     }
@@ -104,10 +107,16 @@ export default class Game extends React.Component {
                 });
          */
         let status;
-        if (winner === "") {
-            status = "Winner: " + winner;
-        } else {
+        let color;
+        let clicker;
+        if (winner === "" || winner === null || winner === 'null') {
             status = "Now plays: " + (this.state.xIsNext ? "X" : "O");
+            color = '#777879'  ;
+            clicker = ((i) => this.handleClick(i));
+        } else {
+            status = "Winner: " + winner;
+            color = '#008000'
+            clicker = (() => this.handleClick());            
         }
         return (
             <View>
@@ -118,13 +127,13 @@ export default class Game extends React.Component {
                     }}>
                     <Board
                         squares={current.squares}
-                        onClick={i => this.handleClick(i)}
+                        onClick={clicker}
                     />
                 </View>
                 <View>
                     <Text
                         style={{
-                            backgroundColor: '#777879',
+                            backgroundColor: color,
                             fontSize: 0.5,
                             fontWeight: '300',
                             layoutOrigin: [0.5, 0.5],
@@ -137,7 +146,7 @@ export default class Game extends React.Component {
                     {/* <ol>{moves}</ol> */}
                 </View>
                 <View>
-                    <VrButton onClick={()=>this.restartGame()} >
+                    <VrButton onClick={() => this.restartGame()} >
                         <Text
                             style={{
                                 backgroundColor: '#6d0e0e',
